@@ -1,0 +1,66 @@
+/* Navbar styles */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+    color: white;
+  }
+  
+  .navbar-title {
+    font-size: 20px;
+  }
+  
+  /* Content styles */
+  .content {
+    margin-top: 20px;
+    padding: 20px;
+  }
+  
+  .review-heading {
+    color: #333;
+  }
+  
+  /* Table styles */
+  table {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+  }
+  
+  th,
+  td {
+    padding: 10px;
+    text-align: center;
+  }
+  
+  thead th {
+    background-color: #333;
+    color: white;
+  }
+  
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  /* Button styles */
+  .btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-warning {
+    background-color: #ffc107;
+    color: #333;
+    border: none;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+  }
+  
+  .btn:hover {
+    opacity: 0.8;
+  }
+  
