@@ -47,7 +47,7 @@ def trainModelGrid(model, X_train, X_test, y_train, y_test):
 model = LogisticRegression()
 trainModel(model,X_train_scaled,X_test_scaled,y_train,y_test)
 
-# Because In this I can accept more +ve than false -negative
+# Because In this I can accept more +ve than false-negative
 model = LogisticRegression()
 model.fit(X_train_scaled,y_train)
 prob = model.predict_proba(X_test_scaled)[:,1]
@@ -71,7 +71,7 @@ trainModelGrid(gridModel,X_train_scaled,X_test_scaled,y_train,y_test)
 model = SVC(C=50,probability=True)
 model.fit(X_train_scaled,y_train)
 prob = model.predict_proba(X_test_scaled)[:,1]
-y_pred = np.where(prob >=0.4,1,0) # Choosing custom thresold
+y_pred = np.where(prob >=0.4,1,0) # Choosing a custom threshold
 print(classification_report(y_test,y_pred))
 print(confusion_matrix(y_test,y_pred))
 
@@ -155,13 +155,13 @@ y_pred = np.where(prob >=0.5,1,0) # Choosing custom thresold
 print(classification_report(y_test,y_pred))
 print(confusion_matrix(y_test,y_pred))
 
-# Here I will Not tune model This is final accuracy of the model
+# Here I will Not tune model This is a final accuracy of the model
 
 model = RandomForestClassifier(n_estimators=120)
 model.fit(X_train_scaled,y_train)
 prob = model.predict_proba(X_validate_scaled)[:,1]
 
-y_pred = np.where(prob >=0.4,1,0) # Choosing custom thresold
+y_pred = np.where(prob >=0.4,1,0) # Choosing a custom threshold
 
 print(classification_report(y_validate,y_pred))
 print(confusion_matrix(y_validate,y_pred))

@@ -1,6 +1,8 @@
 import mysql.connector
 import spacy
 from nltk.corpus import stopwords
+import requests
+import webbrowser
 
 # Load the spaCy model for natural language processing
 nlp = spacy.load("en_core_web_sm")
@@ -62,7 +64,6 @@ def extract_keywords(query):
 def search_data(user_query, cursor, max_results=5, target_category=None):
 
     keywords = extract_keywords(user_query)
-    # print("Extracted Keywords:", keywords)
     matched_results = []
 
     # Build a dynamic SQL query with multiple OR conditions for each keyword
@@ -72,9 +73,6 @@ def search_data(user_query, cursor, max_results=5, target_category=None):
     if target_category:
         query_str += " AND category = %s"
         params.append(target_category)
-
-    # print("SQL Query:", query_str)
-    # print("Parameters:", params)
 
     cursor.execute(query_str, params)
     results = cursor.fetchall()
@@ -102,6 +100,15 @@ def display_results(results):
         print(f"Content: {content}")
         print("-" * 60)
 
+def is_internet_available():
+    try:
+        # Try to make a simple HTTP request to a reliable website
+        response = requests.get("http://www.google.com", timeout=5)
+        response.raise_for_status()
+        return True
+    except requests.RequestException:
+        return False
+
 def main():
     # Database configuration
     db_host = "localhost"
@@ -121,7 +128,6 @@ def main():
             print("Chatbot: Goodbye! Have a great day!")
             break
 
-        # Handle greetings and farewells
         if user_query in ['hi', 'hello', 'hey']:
             print("Chatbot: Hello! How can I assist you today?")
             continue
@@ -129,7 +135,6 @@ def main():
             print("Chatbot: Goodbye! If you have more questions in the future, feel free to return.")
             break
 
-        # Determine the target category based on user input
         target_category = None
         if 'acts' in user_query:
             target_category = 'Acts'
@@ -144,13 +149,29 @@ def main():
         elif 'corrigenda' in user_query:
             target_category = 'Corrigenda'
 
-        # Search for user query in the specified category
-        matched_results = search_data(user_query, cursor, target_category=target_category)
+        try:
+            matched_results = search_data(user_query, cursor, target_category=target_category)
 
-        if matched_results:
-            display_results(matched_results)
-        else:
-            print("Chatbot: I couldn't find any relevant information. Please try asking in a different way or specify a different topic.")
+            if matched_results:
+                display_results(matched_results)
+            else:
+                print("Chatbot: I couldn't find any relevant information. Let me look that up on the internet.")
+                # Perform a Google search
+                search_query = user_query.replace(" ", "+")
+                search_url = f"https://www.google.com/search?q={search_query}"
+                print(f"Here are some results for you: {search_url}")
+                webbrowser.open(search_url)
+
+        except (requests.RequestException, webbrowser.Error) as ex:
+            if isinstance(ex, requests.RequestException):
+                print(
+                    "Chatbot: It seems like I don't have access to the internet. Connect to the internet to get better results.")
+            elif isinstance(ex, webbrowser.Error):
+                print(
+                    "Chatbot: It seems like there's an issue with the web browser. Make sure you have a web browser installed.")
+        except Exception as e:
+            print(f"Chatbot: An unexpected error occurred: {e}")
+
 
 if __name__ == "__main__":
     main()
